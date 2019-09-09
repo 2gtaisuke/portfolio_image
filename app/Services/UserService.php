@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Models\Traits\FollowUserTrait;
 use App\Models\User;
 use App\Repositories\UserRepositoryInterface as UserRepository;
 use GuzzleHttp\Client;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 
 class UserService
 {
+    use FollowUserTrait;
+    
     /** @var UserRepository */
     private $user_repo;
 

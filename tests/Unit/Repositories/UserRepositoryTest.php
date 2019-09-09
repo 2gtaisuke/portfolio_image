@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Unit\User;
+namespace Tests\Unit\Repositories;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 

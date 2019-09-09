@@ -3,9 +3,7 @@
 
 namespace App\Repositories;
 
-
 use App\Models\User;
-use Illuminate\Database\QueryException;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -24,6 +22,7 @@ class UserRepository implements UserRepositoryInterface
      * @param string|null $email
      * @param string|null $password
      * @param string|null $profile_image
+     * @return User
      * @throws \Throwable
      */
     public function store(

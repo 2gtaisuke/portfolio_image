@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\FollowUserTrait;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, FollowUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -42,7 +42,33 @@ class User extends Authenticatable
         return $this->hasMany(SocialAccount::class);
     }
 
-    public function isMyself(User $compared_user)
+    public function following()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'follow_user',
+            'following_id',
+            'followed_id'
+            );
+    }
+
+    public function follower()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'follow_user',
+            'followed_id',
+            'following_id'
+        );
+    }
+
+    /**
+     * $compared_userが自分自身であればtrueを返す
+     *
+     * @param User $compared_user
+     * @return bool
+     */
+    public function isMyself(User $compared_user): bool
     {
         return intval($this->id) === intval($compared_user->id);
     }
