@@ -7,6 +7,12 @@ Route::get('/', function(){
 });
 
 Route::get('/user/{user}', 'UserController@show')
-    ->middleware('can:view,user')->name('user.show');
+    ->name('user.show');
 
-Auth::routes();
+// login
+Route::get('login/{provider}', 'SocialAccountController@redirectToProvider')
+    ->name('social.login');
+Route::get('login/{provider}/callback', 'SocialAccountController@handleProviderCallback')
+    ->name('social.callback');
+
+Auth::routes(['verify' => true]);

@@ -9,3 +9,15 @@
 @import '~@fortawesome/fontawesome-free/scss/regular';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
+
+.login-social {
+  .login-github {
+    color: #333;
+  }
+  .login-google {
+    color: #dd4b39;
+  }
+  .login-twitter {
+    color: #1da1f2;
+  }
+}
