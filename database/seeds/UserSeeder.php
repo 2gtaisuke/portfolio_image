@@ -14,6 +14,9 @@ class UserSeeder extends Seeder
     {
         factory(User::class)->create([
             'name' => 'foo', 'email' => 'foo@gmail.com'
-        ]);
+        ])->each(function($user){
+            $user->socialAccounts()
+                ->save(factory(App\Models\SocialAccount::class)->make());
+        });
     }
 }

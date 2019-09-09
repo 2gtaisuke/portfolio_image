@@ -16492,3 +16492,15 @@ readers do not read off random characters that represent icons */
   width: auto;
 }
 
+.login-social .login-github {
+  color: #333;
+}
+
+.login-social .login-google {
+  color: #dd4b39;
+}
+
+.login-social .login-twitter {
+  color: #1da1f2;
+}
+
