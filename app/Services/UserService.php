@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Storage;
 
@@ -104,14 +105,14 @@ class UserService
      *
      * @param string $file_url
      * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
     public function storeImage(string $file_url): string
     {
         try {
             $response = $this->guzzle->request('GET', $file_url);
 
-        } catch (ClientException | RequestException | BadResponseException $e) {
+        } catch (ClientException | RequestException | BadResponseException | GuzzleException $e) {
             throw new \Exception($e->getMessage());
         }
 
