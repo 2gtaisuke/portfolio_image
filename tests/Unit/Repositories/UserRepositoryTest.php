@@ -5,6 +5,7 @@ namespace Tests\Unit\Repositories;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class UserRepositoryTest extends TestCase
@@ -33,6 +34,7 @@ class UserRepositoryTest extends TestCase
             'foo',
             'foo@gmail.com',
             Hash::make('foobarbaz'),
+            Str::random(60),
             uniqid() . 'jpg'
         );
 

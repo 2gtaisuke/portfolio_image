@@ -25,7 +25,6 @@ class FollowUserServiceTrait
         $following_user->follow($followed_user);
     }
 
-
     /**
      * $following_userが$followed_userをアンフォローする
      *
