@@ -3,13 +3,86 @@
 @section('title', $user->name)
 
 @section('content')
-    <div class="card">
-        <div class="card-header">ユーザー情報</div>
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="list-group-item">{{ $user->name }}</li>
-                <li class="list-group-item">{{ $user->email }}</li>
-            </ul>
+<div class="card">
+    <div class="card-header">ユーザー情報</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-4 text-center mt-2">
+                <img src="{{ get_user_profile_image($user->profile_image) }}" class="img-fluid" alt="user_profile_image">
+                <div class="follow-button-wrapper text-center">
+{{--                    TODO: ajaxにして入れ替え --}}
+                    <button type="button" class="btn btn-primary mt-2">フォローする</button>
+                    <button type="button" class="btn btn-danger mt-2">フォローを外す</button>
+                </div>
+            </div>
+            <div class="col-8">
+                <table class="table table-borderd">
+                    <thead>
+                    <tr>
+                        <th scope="row">name</th>
+                        <td>{{ $user->name }}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">email</th>
+                        <td>
+{{--                            TODO: ユーザー設定でアドレス開示を選べるようにする --}}
+                            非表示
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+<div class="row mt-4">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-header">フォロワー（３２）</div>
+            <div class="card-body">
+                <a href="">
+                    <img class="rounded-circle" src="{{ asset('storage/unknown_user.jpeg') }}" alt="" height="35" width="35" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">投稿</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#like" role="tab" aria-controls="like" aria-selected="false">いいね</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-12 mt-lg-4 mt-sm-1">
+                                <div class="card image-card">
+                                    <img src="{{ asset('storage/unknown_user.jpeg') }}" class="card-img-top" alt="...">
+                                    <a href="#" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="like" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="row">
+                            <div class="col-lg-3 col-sm-12 mt-lg-4 mt-sm-1">
+                                <div class="card image-card">
+                                    <img src="{{ asset('storage/unknown_user.jpeg') }}" class="card-img-top" alt="...">
+                                    <a href="#" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

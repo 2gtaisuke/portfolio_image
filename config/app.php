@@ -229,4 +229,5 @@ return [
 
     ],
 
+    'unknown_user_profile_image' => env('UNKNOWN_USER_PROFILE_IMAGE', 'unknown_user.jpeg'),
 ];
