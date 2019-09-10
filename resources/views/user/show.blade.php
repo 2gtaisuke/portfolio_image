@@ -43,7 +43,7 @@
 </div>
 <div class="row mt-4">
     <div class="col-4">
-        <div class="card">
+        <div class="card followers-list">
             <div class="card-header">フォロワー（{{ $followers->count() }}）</div>
             <div class="card-body">
                 @foreach($followers as $follower)
