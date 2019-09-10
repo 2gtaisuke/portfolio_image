@@ -1,103 +1,126 @@
 <?php
 
-
 namespace Tests\Unit\Services;
 
 use App\Models\User;
+use App\Services\UserService;
+use Tests\TestCase;
 
-class FollowUserServiceTest
+class FollowUserServiceTest extends TestCase
 {
-    /** @var User */
-    private $user;
-
-    /** @var User */
-    private $followed_user;
+    /** @var UserService */
+    private $user_service;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = factory(User::class)->create();
-        $this->followed_user = factory(User::class)->create();
+
+        factory(User::class, 4)->create();
+        $this->user_service = app()->make(UserService::class);
+    }
+    /**
+     * @test
+     * @group followUser
+     */
+    public function followUser()
+    {
+        $user = User::first();
+        $followed_user = User::find(2);
+        $this->user_service->followUser($user, $followed_user);
+
+        $this->assertEquals($user->following()->first()->id, $followed_user->id);
     }
 
     /**
      * @test
-     * @group follow
+     * @group followUser
+     * @expectedException App\Exceptions\FollowUserException
      */
-    public function follow()
+    public function followUser_既にフォローしてる場合に例外をスローすること()
     {
-        $this->user->follow($this->followed_user);
-
-        $this->assertDatabaseHas(
-            'follow_user',
-            [
-                'user_id' => $this->user->id,
-                'followed_user_id' => $this->followed_user->id
-            ]
-        );
+        $user = User::first();
+        $followed_user = User::find(2);
+        $this->user_service->followUser($user, $followed_user);
+        $this->user_service->followUser($user, $followed_user);
     }
 
     /**
      * @test
-     * @group follow
-     * @depends follow
-     * @expectedException \Exception
+     * @group followUser
+     * @expectedException App\Exceptions\FollowUserException
      */
-    public function follow_既にフォローしていれば例外をスローすること()
+    public function followUser_自分自身の場合に例外をスローすること()
     {
-        $this->user->follow($this->followed_user);
-        $this->user->follow($this->followed_user);
+        $user = $followed_user = User::first();
+        $this->user_service->followUser($user, $followed_user);
     }
 
     /**
      * @test
-     * @group unfollow
-     * @depends follow_既にフォローしていれば例外をスローすること
+     * @group unfollowUser
      */
-    public function unfollow()
+    public function unfollowUser()
     {
-        $this->user->follow($this->followed_user);
-        $this->user->unfollow($this->followed_user);
+        $user = User::first();
+        $followed_user = User::find(2);
+        $user->following()->attach($followed_user->id);
 
-        $this->assertDatabaseMissing(
-            'follow_users',
-            [
-                'following_id' => $this->user->id,
-                'follower_id' => $this->followed_user->id
-            ]
-        );
+        $this->user_service->unfollowUser($user, $followed_user);
+
+        $this->assertFalse($user->isFollowing($followed_user));
     }
 
     /**
      * @test
-     * @group unfollow
-     * @depends unfollow
-     * @expectedException \Exception
+     * @group unfollowUser
+     * @expectedException App\Exceptions\FollowUserException
      */
-    public function unfollow_まだフォローしていなければ例外をスローすること()
+    public function unfollowUser_まだフォローしていない場合に例外をスローすること()
     {
-        $this->user->unfollow($this->followed_user);
+        $user = User::first();
+        $followed_user = User::find(2);
+
+        $this->user_service->unfollowUser($user, $followed_user);
     }
 
     /**
      * @test
-     * @group isFollowing
-     * @depends follow_既にフォローしていれば例外をスローすること
+     * @group unfollowUser
+     * @expectedException App\Exceptions\FollowUserException
      */
-    public function isFollowing_フォローしていればtrueを返すこと()
+    public function unfollowUser_自分自身の場合に例外をスローすること()
     {
-        $this->user->follow($this->followed_user);
-
-        $this->assertTrue($this->user->isFollowing($this->followed_user));
+        $user = $followed_user = User::first();
+        $this->user_service->unfollowUser($user, $followed_user);
     }
 
     /**
      * @test
-     * @group isFollowing
-     * @depends isFollowing_フォローしていればtrueを返すこと
      */
-    public function isFollowing_フォローしていなければfalseを返すこと()
+    public function toggleFollow_まだフォローしていない場合にフォローすること()
     {
-        $this->assertFalse($this->user->isFollowing($this->followed_user));
+        $following_user = User::first();
+        $followed_user = User::find(2);
+
+        $is_follow = $this->user_service->toggleFollow($following_user, $followed_user);
+
+        $this->assertTrue($is_follow);
+        $this->assertTrue($following_user->isFollowing($followed_user));
+    }
+
+    /**
+     * @test
+     */
+    public function toggleFollow_既にフォローしている場合にフォローを外すこと()
+    {
+        $following_user = User::first();
+        $followed_user = User::find(2);
+
+        $following_user->follow($followed_user);
+
+        $is_follow = $this->user_service->toggleFollow($following_user, $followed_user);
+
+        $this->assertFalse($is_follow);
+        $this->assertFalse($following_user->isFollowing($followed_user));
     }
 }

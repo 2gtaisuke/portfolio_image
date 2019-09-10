@@ -5,7 +5,7 @@ use App\Exceptions\FollowUserException;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
-class FollowUserServiceTrait
+trait FollowUserServiceTrait
 {
     /**
      * $following_userが$followed_userをフォローする
@@ -55,5 +55,24 @@ class FollowUserServiceTrait
             $follower->profile_image = $this->getUserProfileImage($follower);
             return $follower;
         });
+    }
+
+    /**
+     * フォローをトグルする
+     *
+     * @param User $following_user
+     * @param User $followed_user
+     * @return bool
+     * @throws \Exception
+     */
+    public function toggleFollow(User $following_user, User $followed_user): bool
+    {
+        if ($following_user->isFollowing($followed_user)) {
+            $following_user->unfollow($followed_user);
+            return false;
+        } else {
+            $following_user->follow($followed_user);
+            return true;
+        }
     }
 }
