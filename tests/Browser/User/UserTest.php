@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browser;
+namespace Tests\Browser\User;
 
 use App\Models\User;
 use Tests\DuskTestCase;
@@ -37,14 +37,16 @@ class UserTest extends DuskTestCase
     /**
      * @test
      */
-    public function ログインしている場合にヘッダーにユーザー名が表示されること()
+    public function ログインしている場合にヘッダーにユーザーの画像が表示されること()
     {
         $this->browse(function (Browser $browser) {
             $user = User::first();
 
             $browser->loginAs($user);
             $browser->visit('/')
-                ->assertSee($user->name);
+                ->assertSourceHas(get_user_profile_image($user->profile_image));
+
+            $browser->logout();
         });
     }
 }
