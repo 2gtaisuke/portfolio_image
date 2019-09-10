@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\SocialAccountService;
 use App\Services\UserService;
 use Illuminate\Auth\AuthManager;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User;
 use Psr\Log\LoggerInterface;
 use Illuminate\Http\RedirectResponse;
@@ -84,12 +85,13 @@ class SocialAccountController extends Controller
 
             $user = $this->user_service->storeWithSocialAccount(
                 $user_name,
+                Str::random(60),
                 $profile_image,
                 $provider,
                 $provided_user_info->getId()
             );
 
-        } catch(\Exception $e) {
+        } catch(\Exception | \Throwable $e) {
             $this->logger->error($e->getMessage());
             # 画像を削除
             if(isset($local_avatar_path)) {

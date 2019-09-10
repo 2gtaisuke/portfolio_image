@@ -18,9 +18,4 @@ class UserPolicy
     {
         //
     }
-
-    public function view(User $user, User $compared_user)
-    {
-        return $user->isMyself($compared_user);
-    }
 }

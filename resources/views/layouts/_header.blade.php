@@ -12,17 +12,19 @@
                 <a class="nav-link" href="#">{{ __('bar') }}</a>
             </li>
         </ul>
-        @if(Auth::check())
+        @if($login_user)
             <div class="logged-in-user-dropdown dropdown ml-2 fx2">
                 <div class="btn-group logged-in-user-dropdown text-light">
                     <div class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ $login_user->name }}
+                        <img src="{{ get_user_profile_image($login_user->profile_image) }}" alt="" width="25" height="25">
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item" type="button"><a href="#" class="text-dark">
+                        <button class="dropdown-item" type="button">
+                            <a href="{{ route('user.show', ['id' => $login_user->id], false) }}" class="text-dark text-decoration-none">
                                 <i class="far fa-user"></i>
                                 ユーザー情報
-                            </a></button>
+                            </a>
+                        </button>
                         <button class="dropdown-item text-dark" type="button" id="logoutLink">
                             <form action="{{ route('logout', [], false) }}" method="post" id="logoutForm">@csrf</form>
                             <i class="fas fa-sign-out-alt"></i>

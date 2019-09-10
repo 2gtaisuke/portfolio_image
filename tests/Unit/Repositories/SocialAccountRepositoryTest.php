@@ -1,24 +1,24 @@
 <?php
 
-namespace Tests\Unit\SocialAccount;
+namespace Tests\Unit\Repositories;
 
 use App\Models\SocialAccount;
 use App\Models\User;
-use App\Services\SocialAccountService;
+use App\Repositories\SocialAccountRepository;
+use App\Repositories\SocialAccountRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class SocialAccountServiceTest extends TestCase
+class SocialAccountRepositoryTest extends TestCase
 {
-    /** @var SocialAccountService */
-    private $social_account_service;
+    /** @var SocialAccountRepositoryInterface */
+    private $social_account_repo;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->social_account_service = app()->make(SocialAccountService::class);
+
+        $this->social_account_repo = app()->make(SocialAccountRepository::class);
     }
 
     /**
@@ -35,7 +35,7 @@ class SocialAccountServiceTest extends TestCase
             $user->socialAccounts()->save(factory(SocialAccount::class)->make($data));
         });
 
-        $social_account = $this->social_account_service->find([
+        $social_account = $this->social_account_repo->find([
             'provider_name' => $data['provider_name'],
             'provider_id' => $data['provider_id']
         ]);
@@ -64,7 +64,7 @@ class SocialAccountServiceTest extends TestCase
             $i++;
         }
 
-        $social_account = $this->social_account_service->find([
+        $social_account = $this->social_account_repo->find([
             'provider_name' => 'github'
         ]);
 
@@ -77,7 +77,7 @@ class SocialAccountServiceTest extends TestCase
      */
     public function find_結果が０の場合にnullを返す()
     {
-        $social_account = $this->social_account_service->find([
+        $social_account = $this->social_account_repo->find([
             'provider_name' => 'github'
         ]);
 
@@ -90,13 +90,16 @@ class SocialAccountServiceTest extends TestCase
     public function store()
     {
         $user = factory(User::class)->create();
+
         $id = uniqid();
-        $social_account = $this->social_account_service->store($user, 'github', $id);
+        $social_account = $this->social_account_repo->store($user,'github', $id);
 
         $this->assertInstanceOf(SocialAccount::class, $social_account);
         $this->assertDatabaseHas(
             'social_accounts',
-            ['provider_name' => 'github', 'provider_id' => $id]
+            [
+                'provider_id' => $id, 'provider_name' => 'github'
+            ]
         );
     }
 }

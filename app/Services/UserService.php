@@ -3,18 +3,22 @@
 
 namespace App\Services;
 
+use App\Services\Traits\FollowUserServiceTrait;
 use App\Models\User;
 use App\Repositories\UserRepositoryInterface as UserRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Storage;
 
 
 class UserService
 {
+    use FollowUserServiceTrait;
+
     /** @var UserRepository */
     private $user_repo;
 
@@ -47,6 +51,7 @@ class UserService
      * @param string $user_name
      * @param string|null $email
      * @param string|null $password
+     * @param string|null $api_token
      * @param string|null $profile_image
      * @return User
      * @throws \Throwable
@@ -55,16 +60,18 @@ class UserService
         string $user_name,
         string $email = null,
         string $password = null,
+        string $api_token = null,
         string $profile_image = null
     ): User
     {
-        return $this->user_repo->store($user_name, $email, $password, $profile_image);
+        return $this->user_repo->store($user_name, $email, $password, $api_token, $profile_image);
     }
 
     /**
      * ユーザーとソーシャルアカウントを作成する
      *
      * @param string $user_name
+     * @param string $api_token
      * @param string $profile_image
      * @param string $provider_name
      * @param string $provider_id
@@ -73,6 +80,7 @@ class UserService
      */
     public function storeWithSocialAccount(
         string $user_name,
+        string $api_token,
         string $profile_image,
         string $provider_name,
         string $provider_id
@@ -80,7 +88,7 @@ class UserService
     {
         try {
             $this->database_manager->beginTransaction();
-            $created_user = $this->store($user_name, null, null, $profile_image);
+            $created_user = $this->store($user_name, null, null, $api_token, $profile_image);
             $this->social_account_service->store($created_user, $provider_name, $provider_id);
 
             $this->database_manager->commit();
@@ -97,14 +105,14 @@ class UserService
      *
      * @param string $file_url
      * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
     public function storeImage(string $file_url): string
     {
         try {
             $response = $this->guzzle->request('GET', $file_url);
 
-        } catch (ClientException | RequestException | BadResponseException $e) {
+        } catch (ClientException | RequestException | BadResponseException | GuzzleException $e) {
             throw new \Exception($e->getMessage());
         }
 
