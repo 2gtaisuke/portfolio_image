@@ -9,11 +9,15 @@
         <div class="row">
             <div class="col-4 text-center mt-2">
                 <img src="{{ get_user_profile_image($user->profile_image) }}" class="img-fluid" alt="user_profile_image">
-                <div class="follow-button-wrapper text-center">
-{{--                    TODO: ajaxにして入れ替え --}}
-                    <button type="button" class="btn btn-primary mt-2">フォローする</button>
-                    <button type="button" class="btn btn-danger mt-2">フォローを外す</button>
-                </div>
+                @if($login_user && !$login_user->isMyself($user))
+                    <div class="follow-button-wrapper text-center mt-2">
+                        @if($login_user->isFollowing($user))
+                            <button type="button" id="followUserBtn" class="btn btn-secondary mt-2" data-follow="{{ $user->id }}">フォローを外す</button>
+                        @else
+                            <button type="button" id="followUserBtn" class="btn btn-primary mt-2" data-follow="{{ $user->id }}">フォローする</button>
+                        @endif
+                    </div>
+                @endif
             </div>
             <div class="col-8">
                 <table class="table table-borderd">
@@ -40,11 +44,13 @@
 <div class="row mt-4">
     <div class="col-4">
         <div class="card">
-            <div class="card-header">フォロワー（３２）</div>
+            <div class="card-header">フォロワー（{{ $followers->count() }}）</div>
             <div class="card-body">
-                <a href="">
-                    <img class="rounded-circle" src="{{ asset('storage/unknown_user.jpeg') }}" alt="" height="35" width="35" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
-                </a>
+                @foreach($followers as $follower)
+                    <a href="{{ route('user.show', ['id' => $follower->id], false) }}">
+                        <img class="rounded-circle" src="{{ get_user_profile_image($follower->profile_image) }}" alt="" height="35" width="35" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>

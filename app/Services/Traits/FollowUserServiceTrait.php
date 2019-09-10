@@ -44,20 +44,6 @@ trait FollowUserServiceTrait
     }
 
     /**
-     * フォロワーを取得する
-     *
-     * @param User $user
-     * @return Collection
-     */
-    public function getFollower(User $user): Collection
-    {
-        return $user->follower()->get()->map(function ($follower) {
-            $follower->profile_image = $this->getUserProfileImage($follower);
-            return $follower;
-        });
-    }
-
-    /**
      * フォローをトグルする
      *
      * @param User $following_user
@@ -68,11 +54,22 @@ trait FollowUserServiceTrait
     public function toggleFollow(User $following_user, User $followed_user): bool
     {
         if ($following_user->isFollowing($followed_user)) {
-            $following_user->unfollow($followed_user);
+            $this->unfollowUser($following_user, $followed_user);
             return false;
         } else {
-            $following_user->follow($followed_user);
+            $this->followUser($following_user, $followed_user);
             return true;
         }
+    }
+
+    /**
+     * フォロワーを取得する
+     *
+     * @param User $user
+     * @return Collection
+     */
+    public function getFollower(User $user): Collection
+    {
+        return $user->follower()->get();
     }
 }

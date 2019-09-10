@@ -24,7 +24,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('user.show', compact('user'));
+        $followers = $this->user_service->getFollower($user);
+        return view('user.show', compact('user', 'followers'));
     }
 
     /**
@@ -50,7 +51,7 @@ class UserController extends Controller
         return response()
             ->json([
                 'status' => 'success',
-                'liked'  => $is_follow
+                'following'  => $is_follow
             ]);
     }
 }

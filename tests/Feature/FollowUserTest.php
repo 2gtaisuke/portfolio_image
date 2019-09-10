@@ -21,7 +21,7 @@ class FollowUserTest extends TestCase
                 route('follow.toggle', ['id' => $followed_user->id])
             )
             ->assertStatus(200)
-            ->assertJson(['status' => 'success', 'liked' => true]);
+            ->assertJson(['status' => 'success', 'following' => true]);
 
         $this->assertTrue($following_user->isFollowing($followed_user));
     }
@@ -42,7 +42,7 @@ class FollowUserTest extends TestCase
                 route('follow.toggle', ['id' => $followed_user->id])
             )
             ->assertStatus(200)
-            ->assertJson(['status' => 'success', 'liked' => false]);
+            ->assertJson(['status' => 'success', 'following' => false]);
 
         $this->assertFalse($following_user->isFollowing($followed_user));
     }

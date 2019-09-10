@@ -123,4 +123,28 @@ class FollowUserServiceTest extends TestCase
         $this->assertFalse($is_follow);
         $this->assertFalse($following_user->isFollowing($followed_user));
     }
+
+    /**
+     * @test
+     * @expectedException App\Exceptions\followUserException
+     */
+    public function toggleFollow_自分自身の場合に例外をスローすること()
+    {
+        $following_user = $followed_user = User::first();
+
+        $this->user_service->toggleFollow($following_user, $followed_user);
+    }
+
+    /**
+     * @test
+     */
+    public function getFollower()
+    {
+        $following_user = User::first();
+        $followed_user = User::find(2);
+
+        $following_user->follow($followed_user);
+
+        $this->assertCount(1, $this->user_service->getFollower($followed_user));
+    }
 }
