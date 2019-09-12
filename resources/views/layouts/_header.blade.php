@@ -19,12 +19,18 @@
                         <img src="{{ get_user_profile_image($login_user->profile_image) }}" alt="" width="25" height="25">
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <a href="{{ route('user.show', ['id' => $login_user->id], false) }}" class="text-dark text-decoration-none">
                         <button class="dropdown-item" type="button">
-                            <a href="{{ route('user.show', ['id' => $login_user->id], false) }}" class="text-dark text-decoration-none">
                                 <i class="far fa-user"></i>
                                 ユーザー情報
-                            </a>
                         </button>
+                        </a>
+                        <a href="{{ route('user.edit', ['id' => $login_user->id], false) }}" class="text-dark text-decoration-none">
+                        <button class="dropdown-item" type="button">
+                                <i class="fas fa-cog"></i>
+                                設定
+                        </button>
+                        </a>
                         <button class="dropdown-item text-dark" type="button" id="logoutLink">
                             <form action="{{ route('logout', [], false) }}" method="post" id="logoutForm">@csrf</form>
                             <i class="fas fa-sign-out-alt"></i>

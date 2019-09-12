@@ -36778,6 +36778,9 @@ $(function () {
     $(this).attr('disabled', true);
     $('#logoutForm').submit();
   });
+  $('.form-button').click(function (e) {
+    $(this).closest('form').submit();
+  });
   $('#followUserBtn').click(function (e) {
     e.preventDefault();
     var userId = $(this).data('follow');
@@ -36808,6 +36811,17 @@ $(function () {
       }
     });
     return false;
+  });
+  $("#inputLeaveUsername").keyup(function (e) {
+    var username = $("#hiddenUserName").val();
+    var leaveButton = $("#leaveUserButton");
+
+    if ($(this).val() === username) {
+      leaveButton.prop('disabled', false);
+      return false;
+    }
+
+    leaveButton.prop('disabled', true);
   });
 });
 

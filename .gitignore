@@ -11,3 +11,5 @@ yarn-error.log
 .env*
 Procfile
 nginx.conf
+_ide_helper*
+*jpg

@@ -31,8 +31,7 @@
                     <tr>
                         <th scope="row">email</th>
                         <td>
-{{--                            TODO: ユーザー設定でアドレス開示を選べるようにする --}}
-                            非表示
+                            {{ $user->isExposeEmail() ? $user->email : '非表示' }}
                         </td>
                     </tr>
                     </tbody>
