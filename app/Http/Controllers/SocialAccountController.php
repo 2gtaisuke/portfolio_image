@@ -76,7 +76,7 @@ class SocialAccountController extends Controller
 
         try {
             // 画像保存
-            $profile_image = $this->user_service->storeImage($provided_user_info->getAvatar());
+            $profile_image = $this->user_service->downloadAndStoreImage($provided_user_info->getAvatar());
 
             // プロバイダによって異なる。
             // github: getNickName()

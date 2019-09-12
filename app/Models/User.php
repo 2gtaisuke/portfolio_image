@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'profile_image', 'api_token'
+        'name', 'email', 'password', 'profile_image', 'expose_email', 'api_token'
     ];
 
     /**
@@ -71,5 +71,15 @@ class User extends Authenticatable
     public function isMyself(User $compared_user): bool
     {
         return intval($this->id) === intval($compared_user->id);
+    }
+
+    /**
+     * メールアドレスを公開するか否かを返す
+     *
+     * @return bool
+     */
+    public function isExposeEmail()
+    {
+        return $this->expose_email == true;
     }
 }

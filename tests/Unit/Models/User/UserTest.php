@@ -25,4 +25,28 @@ class UserTest extends TestCase
         $user2 = factory(User::class)->create();
         $this->assertFalse($user1->isMyself($user2));
     }
+
+    /**
+     * @test
+     */
+    public function isExposeEmail_公開する()
+    {
+        $user1 = factory(User::class)->create([
+            'expose_email' => '1'
+        ]);
+
+        $this->assertTrue($user1->isExposeEmail());
+    }
+
+    /**
+     * @test
+     */
+    public function isExposeEmail_公開しない()
+    {
+        $user1 = factory(User::class)->create([
+            'expose_email' => '0'
+        ]);
+
+        $this->assertFalse($user1->isExposeEmail());
+    }
 }

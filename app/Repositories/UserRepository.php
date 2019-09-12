@@ -44,4 +44,36 @@ class UserRepository implements UserRepositoryInterface
 
         return $this->user;
     }
+
+    /**
+     * ユーザーを更新する
+     *
+     * @param int $id
+     * @param string $user_name
+     * @param bool $is_expose_email
+     * @param string $profile_image
+     * @return User
+     * @throws \Exception
+     */
+    public function update(int $id, string $user_name, bool $is_expose_email = false, string $profile_image = null): User
+    {
+        if(!($user = $this->user->find($id))) {
+            throw new \Exception();
+        }
+
+        $attributes = [
+            'name' => $user_name,
+            'expose_email' => (int)$is_expose_email
+        ];
+
+        if (!is_null($profile_image)) {
+            $attributes = array_merge($attributes, [
+                'profile_image' => $profile_image
+            ]);
+        }
+
+        $user->fill($attributes)->saveOrFail();
+
+        return $user;
+    }
 }

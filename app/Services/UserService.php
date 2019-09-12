@@ -67,6 +67,31 @@ class UserService
         return $this->user_repo->store($user_name, $email, $password, $api_token, $profile_image);
     }
 
+
+    /**
+     * ユーザー情報を更新する
+     *
+     * @param int $id
+     * @param string $name
+     * @param bool $is_expose_email
+     * @param string|null $profile_image
+     */
+    public function update(int $id, string $name, bool $is_expose_email = false, string $profile_image = null)
+    {
+        $this->user_repo->update($id, $name, $is_expose_email, $profile_image);
+    }
+
+    /**
+     * ユーザーを削除する
+     *
+     * @param User $user
+     * @throws \Exception
+     */
+    public function deleteUser(User $user)
+    {
+        $user->delete();
+    }
+
     /**
      * ユーザーとソーシャルアカウントを作成する
      *
@@ -107,7 +132,7 @@ class UserService
      * @return string
      * @throws \Exception
      */
-    public function storeImage(string $file_url): string
+    public function downloadAndStoreImage(string $file_url): string
     {
         try {
             $response = $this->guzzle->request('GET', $file_url);
@@ -121,9 +146,21 @@ class UserService
 
         $dest_name = uniqid() . '.' . $extension;
 
+        // FIXME: 第３引数はなに？
         Storage::put($dest_name, $response->getBody(), 'public');
 
         return $dest_name;
+    }
+
+    /**
+     * 画像を保存する
+     *
+     * @param string $file_name
+     * @param string $resouce
+     */
+    public function storeImage(string $file_name, string $resouce)
+    {
+        Storage::put($file_name, $resouce);
     }
 
     /**

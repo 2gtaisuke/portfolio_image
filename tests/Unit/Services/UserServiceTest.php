@@ -39,6 +39,24 @@ class UserServiceTest extends TestCase
     /**
      * @test
      */
+    public function deleteUser()
+    {
+        $name = 'foo';
+        $email = 'foo@gmail.com';
+        $user = factory(User::class)->create([
+            'name' => $name, 'email' => $email
+        ]);
+        $this->user_service->deleteUser($user);
+
+        $this->assertDatabaseMissing(
+            'users',
+            ['name' => $name, 'email' => $email]
+        );
+    }
+
+    /**
+     * @test
+     */
     public function storeWithSocialAccount()
     {
         $name = 'foo';

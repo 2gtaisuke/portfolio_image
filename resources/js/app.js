@@ -13,6 +13,10 @@ $(function(){
         $('#logoutForm').submit();
     });
 
+    $('.form-button').click(function(e){
+        $(this).closest('form').submit();
+    });
+
     $('#followUserBtn').click(function(e){
         e.preventDefault();
 
@@ -45,5 +49,16 @@ $(function(){
         });
 
         return false;
+    });
+
+    $("#inputLeaveUsername").keyup(function(e) {
+        const username = $("#hiddenUserName").val();
+        const leaveButton = $("#leaveUserButton");
+        if ($(this).val() === username) {
+            leaveButton.prop('disabled', false);
+            return false;
+        }
+
+        leaveButton.prop('disabled', true);
     });
 });
